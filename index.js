@@ -76,7 +76,7 @@ function handleEvents(event){
   if ((event.message.text).toLowerCase().includes('nasdaq')) {
     return client.replyMessage(event.replyToken, {
       type: 'text',
-      text: `ทำนาย NASDAQ\n${todayFormatted} : ${jsonData['NASDAQ_d'][0]}\n${tomorrowFormatted} : ${jsonData['NASDAQ_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['NASDAQ_d'][2]}`
+      text: `ทำนาย NASDAQ\n${todayFormatted} : ${jsonData['NASDAQ/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['NASDAQ/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['NASDAQ/USD_d'][2]}`
     });
   }
 
