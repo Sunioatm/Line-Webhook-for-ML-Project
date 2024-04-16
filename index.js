@@ -83,7 +83,7 @@ function handleEvents(event){
     return client.replyMessage(event.replyToken, 
       {
       type: 'text',
-      text: `ทำนาย NASDAQ\n${todayFormatted} : ${jsonData['NADSAQ/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['NADSAQ/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['NADSAQ/USD_d'][2]}`
+      text: `ทำนาย NASDAQ\n${todayFormatted} : ${jsonData['NASDAQ/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['NASDAQ/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['NASDAQ/USD_d'][2]}`
       }
     );
   }
