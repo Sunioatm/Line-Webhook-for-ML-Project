@@ -56,56 +56,36 @@ function handleEvents(event){
     return Promise.resolve(null);
   }
   if ((event.message.text).toLowerCase().includes('btc')) {
-    return client.replyMessage(event.replyToken, [
+    return client.replyMessage(event.replyToken,
       {
         type: 'text',
         text: `ทำนาย BTC\n${todayFormatted} : ${jsonData['BTC/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['BTC/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['BTC/USD_d'][2]}`
       },
-      {
-        type: 'image',
-        originalContentUrl: 'https://raw.githubusercontent.com/Sunioatm/Predicted-JSON/main/predicted_btc.png',
-        previewImageUrl: 'https://raw.githubusercontent.com/Sunioatm/Predicted-JSON/main/predicted_btc.png'
-      }
-    ]);
+    );
   }
   if ((event.message.text).toLowerCase().includes('set')) {
-    return client.replyMessage(event.replyToken, [
+    return client.replyMessage(event.replyToken,
       {
       type: 'text',
       text: `ทำนาย SET\n${todayFormatted} : ${jsonData['SET/THB_d'][0]}\n${tomorrowFormatted} : ${jsonData['SET/THB_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['SET/THB_d'][2]}`
       },
-      {
-        type: 'image',
-        originalContentUrl: 'https://raw.githubusercontent.com/Sunioatm/Predicted-JSON/main/predicted_set.png',
-        previewImageUrl: 'https://raw.githubusercontent.com/Sunioatm/Predicted-JSON/main/predicted_set.png'
-      }
-      ]);
+      );
   }
   if ((event.message.text).toLowerCase().includes('nvda')) {
-    return client.replyMessage(event.replyToken, [
+    return client.replyMessage(event.replyToken, 
       {
       type: 'text',
       text: `ทำนาย NVDA\n${todayFormatted} : ${jsonData['NVDA/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['NVDA/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['NVDA/USD_d'][2]}`
-      },
-      {
-        type: 'image',
-        originalContentUrl: 'https://raw.githubusercontent.com/Sunioatm/Predicted-JSON/main/predicted_nvda.png',
-        previewImageUrl: 'https://raw.githubusercontent.com/Sunioatm/Predicted-JSON/main/predicted_nvda.png'
       }
-    ]);
+    );
   }
   if ((event.message.text).toLowerCase().includes('nasdaq')) {
-    return client.replyMessage(event.replyToken, [
+    return client.replyMessage(event.replyToken, 
       {
       type: 'text',
       text: `ทำนาย NASDAQ\n${todayFormatted} : ${jsonData['NADSAQ/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['NADSAQ/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['NADSAQ/USD_d'][2]}`
-      },
-      {
-        type: 'image',
-        originalContentUrl: 'https://raw.githubusercontent.com/Sunioatm/Predicted-JSON/main/predicted_nasdaq.png',
-        previewImageUrl: 'https://raw.githubusercontent.com/Sunioatm/Predicted-JSON/main/predicted_nasdaq.png'
       }
-    ]);
+    );
   }
 
   return client.replyMessage(event.replyToken, {
