@@ -59,7 +59,7 @@ function handleEvents(event){
     return client.replyMessage(event.replyToken,
       {
         type: 'text',
-        text: `ทำนาย BTC\n${todayFormatted} : ${jsonData['BTC/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['BTC/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['BTC/USD_d'][2]}`
+        text: `ทำนาย BTC/USD\n${todayFormatted} : ${jsonData['BTC/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['BTC/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['BTC/USD_d'][2]}`
       },
     );
   }
@@ -67,7 +67,7 @@ function handleEvents(event){
     return client.replyMessage(event.replyToken,
       {
       type: 'text',
-      text: `ทำนาย SET\n${todayFormatted} : ${jsonData['SET/THB_d'][0]}\n${tomorrowFormatted} : ${jsonData['SET/THB_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['SET/THB_d'][2]}`
+      text: `ทำนาย SET/THB\n${todayFormatted} : ${jsonData['SET/THB_d'][0]}\n${tomorrowFormatted} : ${jsonData['SET/THB_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['SET/THB_d'][2]}`
       },
       );
   }
@@ -75,7 +75,7 @@ function handleEvents(event){
     return client.replyMessage(event.replyToken, 
       {
       type: 'text',
-      text: `ทำนาย NVDA\n${todayFormatted} : ${jsonData['NVDA/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['NVDA/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['NVDA/USD_d'][2]}`
+      text: `ทำนาย NVDA/USD\n${todayFormatted} : ${jsonData['NVDA/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['NVDA/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['NVDA/USD_d'][2]}`
       }
     );
   }
@@ -83,14 +83,14 @@ function handleEvents(event){
     return client.replyMessage(event.replyToken, 
       {
       type: 'text',
-      text: `ทำนาย NASDAQ\n${todayFormatted} : ${jsonData['NASDAQ/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['NASDAQ/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['NASDAQ/USD_d'][2]}`
+      text: `ทำนาย NASDAQ/USD\n${todayFormatted} : ${jsonData['NASDAQ/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['NASDAQ/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['NASDAQ/USD_d'][2]}`
       }
     );
   }
 
   return client.replyMessage(event.replyToken, {
     type: 'text',
-    text: "We currently have only \nNVDA\nSET\nNASDAQ\nBTC"
+    text: "We currently have only \nNVDA\nNASDAQ\nSET\nBTC"
   });
 }
 const PORT = process.env.PORT || 8080;
