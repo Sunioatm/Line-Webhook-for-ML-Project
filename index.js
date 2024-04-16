@@ -46,27 +46,28 @@ function handleEvents(event){
   if ((event.message.text).toLowerCase().includes('btc')) {
     return client.replyMessage(event.replyToken, {
       type: 'text',
-      text : `ทำนายราคาวันที่ 1 : ${jsonData.BTC/USD_d[0]}\nทำนายราคาวันที่ 2 : ${jsonData.BTC/USD_d[1]}\nทำนายราคาวันที่ 3 : ${jsonData.BTC/USD_d[2]}`
-    });
-  }
-  if ((event.message.text).toLowerCase().includes('nasdaq')) {
-    return client.replyMessage(event.replyToken, {
-      type: 'text',
-      text : `ทำนายราคาวันที่ 1 : ${jsonData.NASDAQ/USD_d[0]}\nทำนายราคาวันที่ 2 : ${jsonData.NASDAQ/USD_d[1]}\nทำนายราคาวันที่ 3 : ${jsonData.NASDAQ/USD_d[2]}`
+      text : `ทำนายราคาวันที่ 1 : ${jsonData['BTC/USD_d'][0]}\nทำนายราคาวันที่ 2 : ${jsonData['BTC/USD_d'][1]}\nทำนายราคาวันที่ 3 : ${jsonData['BTC/USD_d'][2]}`
     });
   }
   if ((event.message.text).toLowerCase().includes('set')) {
     return client.replyMessage(event.replyToken, {
       type: 'text',
-      text : `ทำนายราคาวันที่ 1 : ${jsonData.SET/THB_d[0]}\nทำนายราคาวันที่ 2 : ${jsonData.SET/THB_d[1]}\nทำนายราคาวันที่ 3 : ${jsonData.SET/THB_d[2]}`
+      text : `ทำนายราคาวันที่ 1 : ${jsonData['SET/THB_d'][0]}\nทำนายราคาวันที่ 2 : ${jsonData['SET/THB_d'][1]}\nทำนายราคาวันที่ 3 : ${jsonData['SET/THB_d'][2]}`
     });
   }
   if ((event.message.text).toLowerCase().includes('nvda')) {
     return client.replyMessage(event.replyToken, {
       type: 'text',
-      text : `ทำนายราคาวันที่ 1 : ${jsonData.NVDA/USD_d[0]}\nทำนายราคาวันที่ 2 : ${jsonData.NVDA/USD_d[1]}\nทำนายราคาวันที่ 3 : ${jsonData.NVDA/USD_d[2]}`
+      text : `ทำนายราคาวันที่ 1 : ${jsonData['NVDA/USD_d'][0]}\nทำนายราคาวันที่ 2 : ${jsonData['NVDA/USD_d'][1]}\nทำนายราคาวันที่ 3 : ${jsonData['NVDA/USD_d'][2]}`
     });
   }
+  if ((event.message.text).toLowerCase().includes('nasdaq')) {
+    return client.replyMessage(event.replyToken, {
+      type: 'text',
+      text : `ทำนายราคาวันที่ 1 : ${jsonData['NASDAQ/USD_d'][0]}\nทำนายราคาวันที่ 2 : ${jsonData['NASDAQ/USD_d'][1]}\nทำนายราคาวันที่ 3 : ${jsonData['NASDAQ/USD_d'][2]}`
+    });
+  }
+  
   return client.replyMessage(event.replyToken, {
     type: 'text',
     text: "We currently have only \nNVDA\nSET\nNASDAQ\nBTC"
