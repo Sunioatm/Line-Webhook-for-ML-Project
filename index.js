@@ -63,8 +63,8 @@ function handleEvents(event){
       },
       {
         type: 'image',
-        originalContentUrl: 'https://github.com/Sunioatm/Predicted-JSON/blob/main/predicted_btc.png',
-        previewImageUrl: 'https://github.com/Sunioatm/Predicted-JSON/blob/main/predicted_btc.png'
+        originalContentUrl: 'https://raw.githubusercontent.com/Sunioatm/Predicted-JSON/main/predicted_btc.png',
+        previewImageUrl: 'https://raw.githubusercontent.com/Sunioatm/Predicted-JSON/main/predicted_btc.png'
       }
     ]);
   }
@@ -76,8 +76,8 @@ function handleEvents(event){
       },
       {
         type: 'image',
-        originalContentUrl: 'https://github.com/Sunioatm/Predicted-JSON/blob/main/predicted_set.png',
-        previewImageUrl: 'https://github.com/Sunioatm/Predicted-JSON/blob/main/predicted_set.png'
+        originalContentUrl: 'https://raw.githubusercontent.com/Sunioatm/Predicted-JSON/main/predicted_set.png',
+        previewImageUrl: 'https://raw.githubusercontent.com/Sunioatm/Predicted-JSON/main/predicted_set.png'
       }
       ]);
   }
@@ -89,8 +89,8 @@ function handleEvents(event){
       },
       {
         type: 'image',
-        originalContentUrl: 'https://github.com/Sunioatm/Predicted-JSON/blob/main/predicted_nvda.png',
-        previewImageUrl: 'https://github.com/Sunioatm/Predicted-JSON/blob/main/predicted_nvda.png'
+        originalContentUrl: 'https://raw.githubusercontent.com/Sunioatm/Predicted-JSON/main/predicted_nvda.png',
+        previewImageUrl: 'https://raw.githubusercontent.com/Sunioatm/Predicted-JSON/main/predicted_nvda.png'
       }
     ]);
   }
@@ -98,12 +98,12 @@ function handleEvents(event){
     return client.replyMessage(event.replyToken, [
       {
       type: 'text',
-      text: `ทำนาย NASDAQ\n${todayFormatted} : ${jsonData['IXIC/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['IXIC/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['IXIC/USD_d'][2]}`
+      text: `ทำนาย NASDAQ\n${todayFormatted} : ${jsonData['NADSAQ/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['NADSAQ/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['NADSAQ/USD_d'][2]}`
       },
       {
         type: 'image',
-        originalContentUrl: 'https://github.com/Sunioatm/Predicted-JSON/blob/main/predicted_nasdaq.png',
-        previewImageUrl: 'https://github.com/Sunioatm/Predicted-JSON/blob/main/predicted_nasdaq.png'
+        originalContentUrl: 'https://raw.githubusercontent.com/Sunioatm/Predicted-JSON/main/predicted_nasdaq.png',
+        previewImageUrl: 'https://raw.githubusercontent.com/Sunioatm/Predicted-JSON/main/predicted_nasdaq.png'
       }
     ]);
   }
