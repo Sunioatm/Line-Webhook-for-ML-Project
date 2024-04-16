@@ -37,8 +37,20 @@ app.post('/webhook', line.middleware(config), (req, res) => {
 
 const client = new line.Client(config);
 
+
+
 function handleEvents(event){
-  console.log('Received event:', event);
+    // create Date today
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const afterTomorrow = new Date(today);
+  afterTomorrow.setDate(afterTomorrow.getDate() + 2);
+  const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+
+  const todayFormatted = today.toLocaleDateString('en-GB', options);
+  const tomorrowFormatted = tomorrow.toLocaleDateString('en-GB', options);
+  const afterTomorrowFormatted = afterTomorrow.toLocaleDateString('en-GB', options);
 
   if (event.type !== 'message' || event.message.type !== 'text') {
     return Promise.resolve(null);
@@ -46,28 +58,28 @@ function handleEvents(event){
   if ((event.message.text).toLowerCase().includes('btc')) {
     return client.replyMessage(event.replyToken, {
       type: 'text',
-      text : `ทำนายราคาวันที่ 1 : ${jsonData['BTC/USD_d'][0]}\nทำนายราคาวันที่ 2 : ${jsonData['BTC/USD_d'][1]}\nทำนายราคาวันที่ 3 : ${jsonData['BTC/USD_d'][2]}`
+      text: `ทำนาย BTC\n${todayFormatted} : ${jsonData['BTC/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['BTC/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['BTC/USD_d'][2]}`
     });
   }
   if ((event.message.text).toLowerCase().includes('set')) {
     return client.replyMessage(event.replyToken, {
       type: 'text',
-      text : `ทำนายราคาวันที่ 1 : ${jsonData['SET/THB_d'][0]}\nทำนายราคาวันที่ 2 : ${jsonData['SET/THB_d'][1]}\nทำนายราคาวันที่ 3 : ${jsonData['SET/THB_d'][2]}`
+      text: `ทำนาย SET\n${todayFormatted} : ${jsonData['SET/THB_d'][0]}\n${tomorrowFormatted} : ${jsonData['SET/THB_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['SET/THB_d'][2]}`
     });
   }
   if ((event.message.text).toLowerCase().includes('nvda')) {
     return client.replyMessage(event.replyToken, {
       type: 'text',
-      text : `ทำนายราคาวันที่ 1 : ${jsonData['NVDA/USD_d'][0]}\nทำนายราคาวันที่ 2 : ${jsonData['NVDA/USD_d'][1]}\nทำนายราคาวันที่ 3 : ${jsonData['NVDA/USD_d'][2]}`
+      text: `ทำนาย NVDA\n${todayFormatted} : ${jsonData['NVDA/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['NVDA/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['NVDA/USD_d'][2]}`
     });
   }
   if ((event.message.text).toLowerCase().includes('nasdaq')) {
     return client.replyMessage(event.replyToken, {
       type: 'text',
-      text : `ทำนายราคาวันที่ 1 : ${jsonData['NASDAQ/USD_d'][0]}\nทำนายราคาวันที่ 2 : ${jsonData['NASDAQ/USD_d'][1]}\nทำนายราคาวันที่ 3 : ${jsonData['NASDAQ/USD_d'][2]}`
+      text: `ทำนาย NASDAQ\n${todayFormatted} : ${jsonData['NASDAQ_d'][0]}\n${tomorrowFormatted} : ${jsonData['NASDAQ_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['NASDAQ_d'][2]}`
     });
   }
-  
+
   return client.replyMessage(event.replyToken, {
     type: 'text',
     text: "We currently have only \nNVDA\nSET\nNASDAQ\nBTC"
