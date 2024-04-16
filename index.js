@@ -27,28 +27,28 @@ function handleEvents(event){
   if (event.type !== 'message' || event.message.type !== 'text') {
     return Promise.resolve(null);
   }
-  if ((event.message.text).toLowerCase() === 'btc') {
+  if ((event.message.text).toLowerCase().includes('btc')) {
     return client.replyMessage(event.replyToken, {
       type: 'text',
-      text: 'BUY IT'
+      text: 'ทำนายราคาวันที่ 1 : $\nทำนายราคาวันที่ 2 $\nทำนายราคาวันที่ 3 $'
     });
   }
-  if (event.message.text === 'nasdaq') {
+  if ((event.message.text).toLowerCase().includes('nasdaq')) {
     return client.replyMessage(event.replyToken, {
       type: 'text',
-      text: 'BUY IT'
+      text: 'ทำนายราคาวันที่ 1 : $\nทำนายราคาวันที่ 2 $\nทำนายราคาวันที่ 3 $'
     });
   }
-  if (event.message.text === 'set') {
+  if ((event.message.text).toLowerCase().includes('set')){
     return client.replyMessage(event.replyToken, {
       type: 'text',
-      text: 'BUY IT'
+      text: 'ทำนายราคาวันที่ 1 : $\nทำนายราคาวันที่ 2 $\nทำนายราคาวันที่ 3 $'
     });
   }
-  if (event.message.text === 'nvda') {
+  if ((event.message.text).toLowerCase().includes('nvda')) {
     return client.replyMessage(event.replyToken, {
       type: 'text',
-      text: 'BUY IT'
+      text: 'ทำนายราคาวันที่ 1 : $\nทำนายราคาวันที่ 2 $\nทำนายราคาวันที่ 3 $'
     });
   }
   return client.replyMessage(event.replyToken, {
