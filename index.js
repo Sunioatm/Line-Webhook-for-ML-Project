@@ -63,14 +63,7 @@ function handleEvents(event){
       },
     );
   }
-  if ((event.message.text).toLowerCase().includes('set')) {
-    return client.replyMessage(event.replyToken,
-      {
-      type: 'text',
-      text: `ทำนาย SET/THB\n${todayFormatted} : ${jsonData['SET/THB_d'][0]}\n${tomorrowFormatted} : ${jsonData['SET/THB_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['SET/THB_d'][2]}`
-      },
-      );
-  }
+
   if ((event.message.text).toLowerCase().includes('nvda')) {
     return client.replyMessage(event.replyToken, 
       {
@@ -90,7 +83,7 @@ function handleEvents(event){
 
   return client.replyMessage(event.replyToken, {
     type: 'text',
-    text: "We currently have only \nNVDA\nNASDAQ\nSET\nBTC"
+    text: "We currently have only \nNVDA\nNASDAQ\nBTC"
   });
 }
 const PORT = process.env.PORT || 8080;
