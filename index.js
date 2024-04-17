@@ -35,6 +35,10 @@ app.post('/webhook', line.middleware(config), (req, res) => {
     });
 });
 
+app.get('/healthz', (req, res) => {
+  res.status(200).send('OK');
+});
+
 const client = new line.Client(config);
 
 
