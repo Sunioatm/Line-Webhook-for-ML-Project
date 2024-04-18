@@ -7,34 +7,21 @@ require('dotenv').config()
 
 const app = express()
 
-// GitHub API URL for the repo content
-const apiUrl = 'https://api.github.com/repos/Sunioatm/Predicted-JSON/contents/predicted.json';
+const jsonFileUrl = 'https://raw.githubusercontent.com/Sunioatm/Predicted-JSON/main/predicted.json';
+// JSON Data Cache
+let jsonData = null;
 
-// Global variable to hold the last update time
-let lastUpdateTime = null;
-
+// Function to fetch JSON Data
 function fetchJsonData() {
-  axios.get(apiUrl, {
-    headers: { 'Authorization': process.env.github_token }  // Use a GitHub token for authorization
-  })
-  .then(response => {
-    const fileContentUrl = response.data.download_url;
-    lastUpdateTime = new Date(response.data.updated_at);  // Store the last update time
-
-    axios.get(fileContentUrl)
-      .then(fileResponse => {
-        jsonData = fileResponse.data;
-        console.log("JSON data updated successfully. Last Update: ", lastUpdateTime.toLocaleString());
-      })
-      .catch(error => {
-        console.error('Error reading JSON file:', error);
-      });
-  })
-  .catch(error => {
-    console.error('Error getting file info:', error);
-  });
+  axios.get(jsonFileUrl)
+    .then(response => {
+      jsonData = response.data;
+      console.log("JSON data updated successfully.");
+    })
+    .catch(error => {
+      console.error('Error reading JSON file:', error);
+    });
 }
-
 
 // Fetch JSON Data every 10 minutes
 setInterval(fetchJsonData, 600000); // 600000 milliseconds = 10 minutes
@@ -62,7 +49,8 @@ const client = new line.Client(config);
 
 
 
-function handleEvents(event) {
+function handleEvents(event){
+    // create Date today
   const today = new Date();
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
@@ -73,30 +61,41 @@ function handleEvents(event) {
   const todayFormatted = today.toLocaleDateString('en-GB', options);
   const tomorrowFormatted = tomorrow.toLocaleDateString('en-GB', options);
   const afterTomorrowFormatted = afterTomorrow.toLocaleDateString('en-GB', options);
-  const lastUpdateFormatted = lastUpdateTime ? lastUpdateTime.toLocaleDateString('en-GB', options) + ' ' + lastUpdateTime.toLocaleTimeString('en-GB') : 'Not Available';
 
   if (event.type !== 'message' || event.message.type !== 'text') {
     return Promise.resolve(null);
   }
-
-  const baseResponse = {
-    type: 'text',
-    text: ""
-  };
-
   if ((event.message.text).toLowerCase().includes('btc')) {
-    baseResponse.text = `ทำนาย BTC/USD\n${todayFormatted} : ${jsonData['BTC/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['BTC/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['BTC/USD_d'][2]}\nLast Updated: ${lastUpdateFormatted}`;
-  } else if ((event.message.text).toLowerCase().includes('nvda')) {
-    baseResponse.text = `ทำนาย NVDA/USD\n${todayFormatted} : ${jsonData['NVDA/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['NVDA/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['NVDA/USD_d'][2]}\nLast Updated: ${lastUpdateFormatted}`;
-  } else if ((event.message.text).toLowerCase().includes('nasdaq')) {
-    baseResponse.text = `ทำนาย NASDAQ/USD\n${todayFormatted} : ${jsonData['NASDAQ/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['NASDAQ/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['NASDAQ/USD_d'][2]}\nLast Updated: ${lastUpdateFormatted}`;
-  } else {
-    baseResponse.text = "We currently have only \nNVDA\nNASDAQ\nBTC";
+    return client.replyMessage(event.replyToken,
+      {
+        type: 'text',
+        text: `ทำนาย BTC/USD\n${todayFormatted} : ${jsonData['BTC/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['BTC/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['BTC/USD_d'][2]}`
+      },
+    );
   }
 
-  return client.replyMessage(event.replyToken, baseResponse);
-}
+  if ((event.message.text).toLowerCase().includes('nvda')) {
+    return client.replyMessage(event.replyToken, 
+      {
+      type: 'text',
+      text: `ทำนาย NVDA/USD\n${todayFormatted} : ${jsonData['NVDA/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['NVDA/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['NVDA/USD_d'][2]}`
+      }
+    );
+  }
+  if ((event.message.text).toLowerCase().includes('nasdaq')) {
+    return client.replyMessage(event.replyToken, 
+      {
+      type: 'text',
+      text: `ทำนาย NASDAQ/USD\n${todayFormatted} : ${jsonData['NASDAQ/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['NASDAQ/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['NASDAQ/USD_d'][2]}`
+      }
+    );
+  }
 
+  return client.replyMessage(event.replyToken, {
+    type: 'text',
+    text: "We currently have only \nNVDA\nNASDAQ\nBTC"
+  });
+}
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
