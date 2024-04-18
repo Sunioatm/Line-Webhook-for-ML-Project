@@ -7,19 +7,24 @@ require('dotenv').config()
 
 const app = express()
 
-const jsonFileUrl = 'https://raw.githubusercontent.com/Sunioatm/Predicted-JSON/main/test.json';
-// define jsonData
+// JSON Data Cache
 let jsonData = null;
-axios.get(jsonFileUrl)
-  .then(response => {
-    jsonData = response.data;
-    // Use the jsonData object here
-    console.log(jsonData);
-  })
-  .catch(error => {
-    console.error('Error reading JSON file:', error);
-  });
 
+// Function to fetch JSON Data
+function fetchJsonData() {
+  axios.get(jsonFileUrl)
+    .then(response => {
+      jsonData = response.data;
+      console.log("JSON data updated successfully.");
+    })
+    .catch(error => {
+      console.error('Error reading JSON file:', error);
+    });
+}
+
+// Fetch JSON Data every 10 minutes
+setInterval(fetchJsonData, 600000); // 600000 milliseconds = 10 minutes
+fetchJsonData(); // Initial fetch
 
 const config = {
   channelAccessToken : process.env.channelAccessToken,
