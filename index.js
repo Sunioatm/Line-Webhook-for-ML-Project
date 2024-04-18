@@ -1,54 +1,96 @@
-const express = require('express')
-const line = require('@line/bot-sdk')
+require('dotenv').config();
 const axios = require('axios');
+const express = require('express');
+const { Client, middleware } = require('@line/bot-sdk');
 
-require('dotenv').config()
+const app = express();
+const client = new Client({
+  channelAccessToken: process.env.channelAccessToken,
+  channelSecret: process.env.channelSecret,
+});
 
-
-const app = express()
-
-// GitHub API URL for the repo content
 const apiUrl = 'https://api.github.com/repos/Sunioatm/Predicted-JSON/contents/predicted.json';
 
-// Global variable to hold the last update time
+let jsonData = null;
 let lastUpdateTime = null;
 
 function fetchJsonData() {
+  const apiUrl = 'https://api.github.com/repos/Sunioatm/Predicted-JSON/commits?path=predicted.json';
+
   axios.get(apiUrl, {
-    headers: { 'Authorization': process.env.github_token }  // Use a GitHub token for authorization
+    headers: { 'Authorization': `Bearer ${process.env.github_token}` }
   })
   .then(response => {
-    const fileContentUrl = response.data.download_url;
-    lastUpdateTime = new Date(response.data.updated_at);  // Store the last update time
+    if (response.data && response.data.length > 0) {
+      const lastCommit = response.data[0];
+      const lastCommitDate = new Date(lastCommit.commit.committer.date);
+      // Format the date as dd/mm/yy
+      lastUpdateTime = `${lastCommitDate.getDate().toString().padStart(2, '0')}/${(lastCommitDate.getMonth() + 1).toString().padStart(2, '0')}/${lastCommitDate.getFullYear().toString().substr(-2)} ${lastCommitDate.getHours().toString().padStart(2, '0')}:${lastCommitDate.getMinutes().toString().padStart(2, '0')}:${lastCommitDate.getSeconds().toString().padStart(2, '0')}`;
+      
+      console.log("Last commit date:", lastUpdateTime);
 
-    axios.get(fileContentUrl)
-      .then(fileResponse => {
-        jsonData = fileResponse.data;
-        console.log("JSON data updated successfully. Last Update: ", lastUpdateTime.toLocaleString());
-      })
-      .catch(error => {
-        console.error('Error reading JSON file:', error);
+      const fileContentUrl = lastCommit.url;
+      return axios.get(fileContentUrl, {
+        headers: { 'Authorization': `Bearer ${process.env.github_token}` }
       });
+    } else {
+      console.log("No commits found for the file.");
+      return Promise.reject("No commits found for the file.");
+    }
+  })
+  .then(response => {
+    if (response.data && response.data.content) {
+      jsonData = JSON.parse(Buffer.from(response.data.content, 'base64').toString('utf8'));
+      console.log("JSON data updated successfully. Last Update: ", lastUpdateTime);
+    } else {
+      console.log("No content found in the latest commit.");
+    }
   })
   .catch(error => {
-    console.error('Error getting file info:', error);
+    console.error('Error fetching JSON data:', error);
   });
 }
 
+fetchJsonData();
+setInterval(fetchJsonData, 600000);  // Update every 10 minutes
 
-// Fetch JSON Data every 10 minutes
-setInterval(fetchJsonData, 600000); // 600000 milliseconds = 10 minutes
-fetchJsonData(); // Initial fetch
+function handleEvent(event) {
+  if (event.type !== 'message' || event.message.type !== 'text') {
+    return Promise.resolve(null);
+  }
 
-const config = {
-  channelAccessToken : process.env.channelAccessToken,
-  channelSecret: process.env.channelSecret
+  const text = event.message.text.toLowerCase();
+  const replyText = createResponse(text);
+  return client.replyMessage(event.replyToken, { type: 'text', text: replyText });
 }
- 
-app.post('/webhook', line.middleware(config), (req, res) => {
-  Promise.all(req.body.events.map(handleEvents))
-    .then((result) => res.json(result))
-    .catch((err) => {
+
+function createResponse(messageText) {
+  if (!jsonData) {
+    return "Data is currently unavailable, please try again later.";
+  }
+
+  const lastUpdatedText = lastUpdateTime ? `Last Updated: ${lastUpdateTime}` : "Last Update time unknown.";
+  
+  if (messageText.includes('btc')) {
+    return `BTC/USD Predictions:\nToday: ${jsonData['BTC/USD_d'][0]}\nTomorrow: ${jsonData['BTC/USD_d'][1]}\n${lastUpdatedText}`;
+  } else if (messageText.includes('nvda')) {
+    return `NVDA/USD Predictions:\nToday: ${jsonData['NVDA/USD_d'][0]}\nTomorrow: ${jsonData['NVDA/USD_d'][1]}\n${lastUpdatedText}`;
+  } else if (messageText.includes('nasdaq')) {
+    return `NASDAQ/USD Predictions:\nToday: ${jsonData['NASDAQ/USD_d'][0]}\nTomorrow: ${jsonData['NASDAQ/USD_d'][1]}\n${lastUpdatedText}`;
+  } else {
+    return "Supported queries are BTC, NVDA, and NASDAQ.";
+  }
+}
+
+
+app.use(express.json());
+
+app.post('/webhook', middleware({ channelAccessToken: process.env.channelAccessToken, channelSecret: process.env.channelSecret }), (req, res) => {
+  Promise.all(req.body.events.map(event => {
+      handleEvent(event)
+    return client.replyMessage(event.replyToken, { type: 'text', text: "Sample reply" });
+  })).then(result => res.json(result))
+    .catch(err => {
       console.error('Error handling events:', err);
       res.status(500).end();
     });
@@ -58,46 +100,7 @@ app.get('/healthz', (req, res) => {
   res.status(200).send('OK');
 });
 
-const client = new line.Client(config);
-
-
-
-function handleEvents(event) {
-  const today = new Date();
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const afterTomorrow = new Date(today);
-  afterTomorrow.setDate(afterTomorrow.getDate() + 2);
-  const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-
-  const todayFormatted = today.toLocaleDateString('en-GB', options);
-  const tomorrowFormatted = tomorrow.toLocaleDateString('en-GB', options);
-  const afterTomorrowFormatted = afterTomorrow.toLocaleDateString('en-GB', options);
-  const lastUpdateFormatted = lastUpdateTime ? lastUpdateTime.toLocaleDateString('en-GB', options) + ' ' + lastUpdateTime.toLocaleTimeString('en-GB') : 'Not Available';
-
-  if (event.type !== 'message' || event.message.type !== 'text') {
-    return Promise.resolve(null);
-  }
-
-  const baseResponse = {
-    type: 'text',
-    text: ""
-  };
-
-  if ((event.message.text).toLowerCase().includes('btc')) {
-    baseResponse.text = `ทำนาย BTC/USD\n${todayFormatted} : ${jsonData['BTC/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['BTC/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['BTC/USD_d'][2]}\nLast Updated: ${lastUpdateFormatted}`;
-  } else if ((event.message.text).toLowerCase().includes('nvda')) {
-    baseResponse.text = `ทำนาย NVDA/USD\n${todayFormatted} : ${jsonData['NVDA/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['NVDA/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['NVDA/USD_d'][2]}\nLast Updated: ${lastUpdateFormatted}`;
-  } else if ((event.message.text).toLowerCase().includes('nasdaq')) {
-    baseResponse.text = `ทำนาย NASDAQ/USD\n${todayFormatted} : ${jsonData['NASDAQ/USD_d'][0]}\n${tomorrowFormatted} : ${jsonData['NASDAQ/USD_d'][1]}\n${afterTomorrowFormatted} : ${jsonData['NASDAQ/USD_d'][2]}\nLast Updated: ${lastUpdateFormatted}`;
-  } else {
-    baseResponse.text = "We currently have only \nNVDA\nNASDAQ\nBTC";
-  }
-
-  return client.replyMessage(event.replyToken, baseResponse);
-}
-
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
