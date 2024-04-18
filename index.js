@@ -7,7 +7,6 @@ require('dotenv').config()
 
 const app = express()
 
-const jsonFileUrl = 'https://raw.githubusercontent.com/Sunioatm/Predicted-JSON/main/predicted.json';
 // JSON Data Cache
 let jsonData = null;
 
