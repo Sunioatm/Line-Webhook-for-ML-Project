@@ -9,6 +9,7 @@ const app = express()
 
 // JSON Data Cache
 let jsonData = null;
+const jsonFileUrl = 'https://raw.githubusercontent.com/Sunioatm/Predicted-JSON/main/predicted.json';
 
 // Function to fetch JSON Data
 function fetchJsonData() {
